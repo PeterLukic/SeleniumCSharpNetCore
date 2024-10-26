@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 using System;
 
 namespace SeleniumCSharpNetCore.Pages
@@ -7,37 +6,16 @@ namespace SeleniumCSharpNetCore.Pages
     public class HomePage
     {
         private readonly IWebDriver _driver;
-        private readonly WebDriverWait _wait;
+        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(10);
 
         public HomePage(IWebDriver driver)
         {
             _driver = driver;
-            // Set up an explicit wait with a 10-second timeout
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
-        // Replace ExpectedConditions with custom wait methods
-        private IWebElement WaitUntilClickable(By by)
-        {
-            return _wait.Until(driver =>
-            {
-                var element = driver.FindElement(by);
-                return element.Displayed && element.Enabled ? element : null;
-            });
-        }
-
-        private IWebElement WaitUntilVisible(By by)
-        {
-            return _wait.Until(driver =>
-            {
-                var element = driver.FindElement(by);
-                return element.Displayed ? element : null;
-            });
-        }
-
-        private IWebElement LnkLogin => WaitUntilClickable(By.LinkText("Login"));
-        private IWebElement LnkLoginFailed => WaitUntilClickable(By.LinkText("Login111"));
-        private IWebElement LnkLogOff => WaitUntilVisible(By.LinkText("Log off"));
+        private IWebElement LnkLogin => _driver.WaitUntilClickable(By.LinkText("Login"), _timeout);
+        private IWebElement LnkLoginFailed => _driver.WaitUntilClickable(By.LinkText("Login111"), _timeout);
+        private IWebElement LnkLogOff => _driver.WaitUntilVisible(By.LinkText("Log off"), _timeout);
 
         public void ClickLogin()
         {
@@ -84,4 +62,3 @@ namespace SeleniumCSharpNetCore.Pages
         }
     }
 }
-

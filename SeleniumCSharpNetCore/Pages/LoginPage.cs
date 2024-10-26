@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 using System;
 
 namespace SeleniumCSharpNetCore.Pages
@@ -7,45 +6,24 @@ namespace SeleniumCSharpNetCore.Pages
     public class LoginPage
     {
         private readonly IWebDriver _driver;
-        private readonly WebDriverWait _wait;
+        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(10);
 
         public LoginPage(IWebDriver driver)
         {
             _driver = driver;
-            // Set up an explicit wait with a 10-second timeout
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
-        // Use custom wait methods to initialize web elements
-        private IWebElement TxtUserName => WaitUntilVisible(By.Name("UserName"));
-        private IWebElement TxtPassword => WaitUntilVisible(By.Name("Password"));
-        private IWebElement BtnLogin => WaitUntilClickable(By.CssSelector(".btn-default"));
-
-        private IWebElement WaitUntilClickable(By by)
-        {
-            return _wait.Until(driver =>
-            {
-                var element = driver.FindElement(by);
-                return element.Displayed && element.Enabled ? element : null;
-            });
-        }
-
-        private IWebElement WaitUntilVisible(By by)
-        {
-            return _wait.Until(driver =>
-            {
-                var element = driver.FindElement(by);
-                return element.Displayed ? element : null;
-            });
-        }
+        private IWebElement TxtUserName => _driver.WaitUntilVisible(By.Name("UserName"), _timeout);
+        private IWebElement TxtPassword => _driver.WaitUntilVisible(By.Name("Password"), _timeout);
+        private IWebElement BtnLogin => _driver.WaitUntilClickable(By.CssSelector(".btn-default"), _timeout);
 
         public void EnterUserNameAndPassword(string userName, string password)
         {
             try
             {
-                TxtUserName.Clear(); // Clear any pre-filled text
+                TxtUserName.Clear();
                 TxtUserName.SendKeys(userName);
-                TxtPassword.Clear(); // Clear any pre-filled text
+                TxtPassword.Clear();
                 TxtPassword.SendKeys(password);
             }
             catch (NoSuchElementException ex)
