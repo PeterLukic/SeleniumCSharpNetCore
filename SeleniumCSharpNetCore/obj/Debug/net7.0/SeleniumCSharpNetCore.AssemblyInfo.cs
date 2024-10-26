@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SeleniumCSharpNetCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60badd97ea9e7c0344df11cd35f59b10811e4f8d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0dffee46c60b91e8ecc7f490c37efa556c5360e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SeleniumCSharpNetCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SeleniumCSharpNetCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
