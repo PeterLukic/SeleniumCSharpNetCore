@@ -7,11 +7,12 @@ using System;
 using System.IO;
 using System.Threading;
 using TechTalk.SpecFlow;
+[assembly: Parallelizable(ParallelScope.Fixtures)]
 
 namespace SeleniumCSharpNetCore.Hooks
 {
     [Binding]
-    [Parallelizable(ParallelScope.Fixtures)]
+   // [Parallelizable(ParallelScope.Fixtures)]
     public sealed class Hooks
     {
         private readonly DriverHelper _driverHelper;
