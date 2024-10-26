@@ -11,3 +11,8 @@ Scenario: Login user as Administrator
 		| admin    | password |
 	And I click login
 	Then I should see user logged in to the application
+
+@mytag
+Scenario: Test Failed
+	Given I navigate to application
+	Then I click the Login link failed

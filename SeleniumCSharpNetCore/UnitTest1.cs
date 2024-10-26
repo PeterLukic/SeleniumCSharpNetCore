@@ -23,7 +23,7 @@ namespace SeleniumCSharpNetCore
             Driver = new ChromeDriver(option);
         }
 
-        [Test]
+    /*    [Test]
         public void Test1()
         {
             Driver.Navigate().GoToUrl("https://demowf.aspnetawesome.com/");
@@ -36,7 +36,7 @@ namespace SeleniumCSharpNetCore
             //CustomControl.ComboBox("ContentPlaceHolder1_AllMealsCombo", "Almonds");
 
             Assert.Pass();
-        }
+        }*/
 
         //[Test]
         //public void LoginTest()

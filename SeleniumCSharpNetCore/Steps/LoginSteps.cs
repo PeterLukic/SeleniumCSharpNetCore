@@ -1,8 +1,6 @@
-﻿using NUnit.Framework;
+﻿using AventStack.ExtentReports;
+using NUnit.Framework;
 using SeleniumCSharpNetCore.Pages;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -16,12 +14,18 @@ namespace SeleniumCSharpNetCore.Steps
         private DriverHelper _driverHelper;
         HomePage homePage;
         LoginPage loginPage;
+        private ExtentTest _test;
 
-        public LoginSteps(DriverHelper driverHelper)
+        public LoginSteps(DriverHelper driverHelper, ScenarioContext scenarioContext)
         {
             _driverHelper = driverHelper;
             homePage = new HomePage(_driverHelper.Driver);
             loginPage = new LoginPage(_driverHelper.Driver);
+            // Get the Extent Test instance from the ScenarioContext, if available
+            if (scenarioContext.ContainsKey("ExtentTest"))
+            {
+                _test = (ExtentTest)scenarioContext["ExtentTest"];
+            }
         }
 
        
@@ -37,6 +41,12 @@ namespace SeleniumCSharpNetCore.Steps
         public void GivenIClickTheLoginLink()
         {
             homePage.ClickLogin();
+        }
+
+        [Then(@"I click the Login link failed")]
+        public void ThenIClickTheLoginLinkFailed()
+        {
+            homePage.ClickLoginFailed();
         }
 
         [Given(@"I enter username and password")]

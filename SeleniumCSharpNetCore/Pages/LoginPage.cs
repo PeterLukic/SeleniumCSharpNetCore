@@ -18,7 +18,6 @@ namespace SeleniumCSharpNetCore.Pages
         IWebElement txtPassword => Driver.FindElement(By.Name("Password"));
         IWebElement btnLogin => Driver.FindElement(By.CssSelector(".btn-default"));
 
-
         public void EnterUserNameAndPassword(string userName, string password)
         {
             txtUserName.SendKeys(userName);
@@ -29,5 +28,7 @@ namespace SeleniumCSharpNetCore.Pages
         {
             btnLogin.Click();
         }
+
+   
     }
 }
