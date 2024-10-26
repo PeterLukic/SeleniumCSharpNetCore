@@ -22,7 +22,8 @@ namespace SeleniumCSharpNetCore.Pages
             try
             {
                 TxtUserName.Clear();
-                TxtUserName.SendKeys(userName);
+                //TxtUserName.SendKeys(userName);
+                CustomControl.EnterText(TxtUserName, userName);
                 TxtPassword.Clear();
                 TxtPassword.SendKeys(password);
             }
