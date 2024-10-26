@@ -14,11 +14,15 @@ namespace SeleniumCSharpNetCore.Hooks
     [Parallelizable(ParallelScope.Fixtures)]
     public sealed class Hooks
     {
-        private DriverHelper _driverHelper;
+        private readonly DriverHelper _driverHelper;
         private static ExtentReports _extent;
-        private static ThreadLocal<ExtentTest> _test = new();
+        private static ThreadLocal<ExtentTest> _test = new ThreadLocal<ExtentTest>();
+        private static readonly ThreadLocal<ScenarioContext> _scenarioContext = new ThreadLocal<ScenarioContext>();
 
-        public Hooks(DriverHelper driverHelper) => _driverHelper = driverHelper;
+        public Hooks(DriverHelper driverHelper)
+        {
+            _driverHelper = driverHelper;
+        }
 
         [BeforeTestRun]
         public static void InitializeReport()
@@ -34,17 +38,26 @@ namespace SeleniumCSharpNetCore.Hooks
         [BeforeScenario]
         public void BeforeScenario(ScenarioContext scenarioContext)
         {
-            ChromeOptions option = new ChromeOptions();
+            // Store ScenarioContext for later use
+            _scenarioContext.Value = scenarioContext;
+
+            // Set up Chrome options
+            var option = new ChromeOptions();
             option.AddArguments("start-maximized");
             option.AddArguments("--disable-gpu");
 
-            var driver = new ChromeDriver(option);
-            _driverHelper.Driver = driver;
+            // Initialize the DriverHelper with a new instance of ChromeDriver
+            _driverHelper.Driver = new ChromeDriver(option);
+
+            // Create a new ExtentTest for this scenario
             _test.Value = _extent.CreateTest(scenarioContext.ScenarioInfo.Title);
+
+            // Store the ExtentTest in ScenarioContext for access in step definitions
+            scenarioContext["ExtentTest"] = _test.Value;
         }
 
         [AfterStep]
-        public void InsertReportingSteps(ScenarioContext scenarioContext)
+        public void InsertReportingSteps()
         {
             if (_test.Value == null)
             {
@@ -52,22 +65,22 @@ namespace SeleniumCSharpNetCore.Hooks
                 return;
             }
 
-            if (scenarioContext.TestError == null)
+            if (_scenarioContext.Value.TestError == null)
             {
                 _test.Value.Log(Status.Pass, "Step passed");
             }
             else
             {
-                var screenshotPath = CaptureScreenshot(scenarioContext.ScenarioInfo.Title);
+                var screenshotPath = CaptureScreenshot(_scenarioContext.Value.ScenarioInfo.Title);
                 var mediaEntity = MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build();
-                _test.Value.Log(Status.Fail, $"Step failed: {scenarioContext.TestError.Message}", mediaEntity);
+                _test.Value.Log(Status.Fail, $"Step failed: {_scenarioContext.Value.TestError.Message}", mediaEntity);
             }
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-            _driverHelper.Driver.Quit();
+            _driverHelper.Driver.Quit(); // Use the method to quit the driver
         }
 
         [AfterTestRun]

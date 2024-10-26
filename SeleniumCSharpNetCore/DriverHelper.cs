@@ -1,12 +1,30 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OpenQA.Selenium.Chrome;
+using System.Threading;
 
 namespace SeleniumCSharpNetCore
 {
     public class DriverHelper
     {
-        public IWebDriver Driver { get; set; }
+        private static ThreadLocal<IWebDriver> _driver = new ThreadLocal<IWebDriver>();
+
+        public IWebDriver Driver
+        {
+            get
+            {
+                // If the driver is not initialized, create a new instance
+                if (!_driver.Value.Equals(null))
+                {
+                    return _driver.Value;
+                }
+
+                _driver.Value = new ChromeDriver(); // Initialize the driver (or any other driver you need)
+                return _driver.Value;
+            }
+            set
+            {
+                _driver.Value = value; // Allows manual driver assignment if needed
+            }
+        }
     }
 }
